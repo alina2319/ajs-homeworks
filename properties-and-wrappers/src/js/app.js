@@ -1,16 +1,34 @@
-function getValuesByUnit(object) {
-    const { special: result } = object;
-    for (let index = 0; index < result.length; index += 1) {
-      const element = result[index];
-      if ('description' in element === false) {
-        element.description = 'Описание недоступно';
-      }
-      const elementCopy = {
-        id: element.id, name: element.name, description: element.description, icon: element.icon,
-      };
-      result.splice(index, 1, elementCopy);
+export const obj = {
+  name: 'мечник', health: 10, level: 2, attack: 80, defence: 40,
+};
+
+export default function orderByProps(object, [...arg]) {
+  const res = {};
+
+  if (Array.isArray(object)) {
+    for (let i = 0; i < object.length; i += 1) {
+      res[object[i].key] = object[i].value;
     }
-    return result;
   }
-  
-  export default getValuesByUnit;
+
+  const result = Object.keys(res).length !== 0 ? res : object;
+
+  const sorted = Object.fromEntries(Object.entries(result).sort());
+  const rest = {};
+
+  for (const prop in result) {
+    if (Object.prototype.hasOwnProperty.call(result, prop)) {
+      for (let i = 0; i < arg.length; i += 1) {
+        if (prop === arg[i]) {
+          rest[prop] = result[prop];
+          delete sorted[prop];
+        }
+      }
+    }
+  }
+
+  const merged = { ...rest, ...sorted };
+  return Object.entries(merged).map((key) => ({ key: key[0], value: key[1] }));
+}
+
+orderByProps(obj, ['name', 'level']);

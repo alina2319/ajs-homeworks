@@ -1,21 +1,44 @@
-import unit from '../unit';
-import getValuesByUnit from '../app';
+import orderByProps, { obj } from '../app';
 
-test('Должен дать массив с описанием атак юнита', () => {
-  const result = getValuesByUnit(unit);
-
-  expect(result).toEqual([
-    {
-      id: 8,
-      name: 'Двойной выстрел',
-      icon: 'http://...',
-      description: 'Двойной выстрел наносит двойной урон',
-    },
-    {
-      id: 9,
-      name: 'Нокаутирующий удар',
-      icon: 'http://...',
-      description: 'Описание недоступно',
-    },
-  ]);
+test('должна сортировать объект', () => {
+  const expected = [
+    { key: 'name', value: 'мечник' },
+    { key: 'level', value: 2 },
+    { key: 'attack', value: 80 },
+    { key: 'defence', value: 40 },
+    { key: 'health', value: 10 },
+  ];
+  const received = orderByProps(obj, ['name', 'level']);
+  expect(received).toEqual(expected);
 });
+
+test('должна преобразовать массив объектов в объект', () => {
+  const received = [
+    { key: 'name', value: 'мечник' },
+    { key: 'attack', value: 80 },
+    { key: 'health', value: 10 },
+    { key: 'level', value: 2 },
+    { key: 'defence', value: 40 },
+  ];
+
+  const expected = [
+    { key: 'name', value: 'мечник' },
+    { key: 'level', value: 2 },
+    { key: 'attack', value: 80 },
+    { key: 'defence', value: 40 },
+    { key: 'health', value: 10 },
+  ];
+
+  expect(orderByProps(received, ['name', 'level'])).toEqual(expected);
+});
+
+test ('должна перебирать собственные свойства'), () => {
+  const test = {
+    apple: 1,
+    banana: 2,
+  };
+}
+  const received = {};
+  Object.setPrototypeOf(received, test);
+  const expected = [];
+  expect(orderByProps(received, ['name', 'level'])).toEqual(expected);
