@@ -1,3 +1,6 @@
+import extract from '../destructuring';
+
+test ('test extract', () => {
 const character = {
   name: 'Лучник',
   type: 'Bowman',
@@ -20,20 +23,20 @@ const character = {
   ],
 };
 
-export default function showSpecialAttack() {
-  const { special } = character;
-  const result = [];
 
-  for (const prop of special) {
-    const {
-      id, name: nameAttack, icon, description = 'Описание недоступно',
-    } = prop;
-    result.push({
-      id, nameAttack, icon, description,
-    });
-  }
-
-  return result;
-}
-
-showSpecialAttack();
+  const resultExtract = extract (character);
+  expect (resultExtract).toEqual([
+    {
+      id: 8,
+      name: 'Двойной выстрел',
+      icon: 'http://...',
+      description: 'Двойной выстрел наносит двойной урон',
+    },
+    {
+      id: 9,
+      name: 'Нокаутирующий удар',
+      icon: 'http://...',
+      description: 'Описание недоступно',
+    },
+  ]);
+});
