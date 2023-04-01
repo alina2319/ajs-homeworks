@@ -1,20 +1,44 @@
-import showSpecialAttack from '../app';
+import orderByProps, { obj } from '../app';
 
-test('должна возвращать извлечённый массив из объектов с четыремя полями', () => {
+test('должна сортировать объект', () => {
   const expected = [
-    {
-      id: 8,
-      nameAttack: 'Двойной выстрел',
-      icon: 'http://...',
-      description: 'Двойной выстрел наносит двойной урон',
-    },
-    {
-      id: 9,
-      nameAttack: 'Нокаутирующий удар',
-      icon: 'http://...',
-      description: 'Описание недоступно',
-    },
+    { key: 'name', value: 'мечник' },
+    { key: 'level', value: 2 },
+    { key: 'attack', value: 80 },
+    { key: 'defence', value: 40 },
+    { key: 'health', value: 10 },
   ];
-  const received = showSpecialAttack();
+  const received = orderByProps(obj, ['name', 'level']);
   expect(received).toEqual(expected);
+});
+
+test('должна преобразовать массив объектов в объект', () => {
+  const received = [
+    { key: 'name', value: 'мечник' },
+    { key: 'attack', value: 80 },
+    { key: 'health', value: 10 },
+    { key: 'level', value: 2 },
+    { key: 'defence', value: 40 },
+  ];
+
+  const expected = [
+    { key: 'name', value: 'мечник' },
+    { key: 'level', value: 2 },
+    { key: 'attack', value: 80 },
+    { key: 'defence', value: 40 },
+    { key: 'health', value: 10 },
+  ];
+
+  expect(orderByProps(received, ['name', 'level'])).toEqual(expected);
+});
+
+test('должна перебирать собственные свойства', () => {
+  const test = {
+    apple: 1,
+    banana: 2,
+  };
+  const received = {};
+  Object.setPrototypeOf(received, test);
+  const expected = [];
+  expect(orderByProps(received, ['name', 'level'])).toEqual(expected);
 });
